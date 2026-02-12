@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14 февраля ❤️</title>
+
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  overflow-y: auto;           
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  text-align: center;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px 150px;   
+  box-sizing: border-box;
+}
+
+.container {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  position: relative;
+  z-index: 2;
+  animation: fadeIn 1.2s ease;
+  max-width: 920px;
+  width: 100%;
+}
+
+h1 { color: #ff3e6c; margin-top: 0; }
+
+button {
+  padding: 12px 25px;
+  margin: 10px;
+  border: none;
+  border-radius: 25px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.yes { background: #ff3e6c; color: white; }
+.yes:hover { background: #ff1e4d; transform: scale(1.1); }
+.no { background: #ddd; position: relative; }
+
+.spotify { margin-top: 20px; }
+.tip { margin-top: 8px; font-size: 13px; color: #888; }
+
+@keyframes fadeIn { from {opacity:0; transform:translateY(16px);} to {opacity:1;} }
+
+.heart {
+  position: fixed;
+  top: -10px;
+  font-size: 20px;
+  animation: fall linear infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+@keyframes fall { to { transform: translateY(110vh); } }
+
+.confetti{
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  animation: confettiFall 3s linear forwards;
+  z-index: 9999;
+  pointer-events: none;
+}
+@keyframes confettiFall{
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+.pop{
+  position: fixed;
+  font-size: 26px;
+  z-index: 9999;
+  animation: popUp 1.2s ease forwards;
+  pointer-events: none;
+}
+@keyframes popUp{
+  0% { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translate(-50%, -140%) scale(1.2); opacity: 0; }
+}
+
+.carousel-fixed {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  display: flex;
+  justify-content: center;
+  z-index: 50;
+  pointer-events: none;
+}
+.carousel-box {
+  width: min(92vw, 980px);
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(7px);
+  border-radius: 18px;
+  padding: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  pointer-events: auto;
+}
+.carousel-title{
+  text-align:center;
+  color:#ff3e6c;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+.carousel-viewport {
+  overflow: hidden;
+  border-radius: 14px;
+}
+.carousel-track {
+  display: flex;
+  gap: 14px;
+  transform: translateX(0);
+  transition: transform 700ms ease;
+  will-change: transform;
+}
+.carousel-track img {
+  width: 200px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+@media (max-width: 520px) {
+  .carousel-track img { width: 150px; height: 105px; }
+}
+
+.viewer {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  padding: 18px;
+}
+.viewer img{
+  max-width: min(92vw, 900px);
+  max-height: 82vh;
+  border-radius: 20px;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.55);
+}
+.viewer .hint{
+  position: fixed;
+  bottom: 18px;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page" id="page">
+  <div class="container">
+    <h1>Ты пойдёшь со мной на свидание 14 февраля? ❤️</h1>
+
+    <button class="yes" onclick="sayYes()">Ия 💖</button>
+    <button class="no" id="noBtn">Жоқ.</button>
+
+    <div class="spotify">
+      <iframe style="border-radius:12px"
+        src="https://open.spotify.com/embed/track/3O2nwd7d4p5qdb77lIoIJZ"
+        width="300" height="80" frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+      </iframe>
+      <div class="tip">🎵 Нажми Play в Spotify</div>
+    </div>
+  </div>
+</div>
+
+<div class="carousel-fixed">
+  <div class="carousel-box">
+    <div class="carousel-title">Наши моменты 💖</div>
+    <div class="carousel-viewport">
+      <div class="carousel-track" id="carouselTrack"></div>
+    </div>
+  </div>
+</div>
+
+<div class="viewer" id="viewer">
+  <img id="viewerImg" alt="photo">
+  <div class="hint">Нажми в любое место, чтобы закрыть</div>
+</div>
+
+<script>
+const couplePhotos = ["janm1.jpeg","janm2.jpeg","janm3.jpeg","janm4.jpeg"];
+
+let carIndex = 0;
+let carTimer = null;
+
+function buildCarousel() {
+  const track = document.getElementById("carouselTrack");
+  if (!track) return;
+  track.innerHTML = "";
+
+  const list = couplePhotos.concat(couplePhotos);
+
+  list.forEach((src) => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "photo";
+    img.addEventListener("click", () => openViewer(src));
+    track.appendChild(img);
+  });
+}
+
+function startCarousel() {
+  const track = document.getElementById("carouselTrack");
+  if (!track || couplePhotos.length < 2) return;
+
+  clearInterval(carTimer);
+  carIndex = 0;
+
+  carTimer = setInterval(() => {
+    const first = track.querySelector("img");
+    if (!first) return;
+
+    const imgW = first.getBoundingClientRect().width;
+    const gap = 14;
+
+    carIndex++;
+
+    if (carIndex >= couplePhotos.length) {
+      track.style.transition = "transform 700ms ease";
+      track.style.transform = `translateX(${-carIndex * (imgW + gap)}px)`;
+
+      setTimeout(() => {
+        track.style.transition = "none";
+        carIndex = 0;
+        track.style.transform = `translateX(0px)`;
+      }, 750);
+      return;
+    }
+
+    track.style.transition = "transform 700ms ease";
+    track.style.transform = `translateX(${-carIndex * (imgW + gap)}px)`;
+  }, 2400);
+}
+
+window.addEventListener("resize", () => {
+  const track = document.getElementById("carouselTrack");
+  if (track) track.style.transform = "translateX(0px)";
+  carIndex = 0;
+});
+
+buildCarousel();
+startCarousel();
+
+const viewer = document.getElementById("viewer");
+const viewerImg = document.getElementById("viewerImg");
+
+function openViewer(src) {
+  viewerImg.src = src;
+  viewer.style.display = "flex";
+}
+viewer.addEventListener("click", () => {
+  viewer.style.display = "none";
+  viewerImg.src = "";
+});
+
+const noBtn = document.getElementById("noBtn");
+function moveNoBtn() {
+  const w = noBtn.offsetWidth, h = noBtn.offsetHeight;
+  const x = Math.random() * (window.innerWidth - w);
+  const y = Math.random() * (window.innerHeight - h);
+  noBtn.style.position = "fixed";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+noBtn.addEventListener("mouseover", moveNoBtn);
+noBtn.addEventListener("mousedown", moveNoBtn);
+noBtn.addEventListener("touchstart", (e)=>{ e.preventDefault(); moveNoBtn(); }, {passive:false});
+
+function sayYes() {
+  createConfetti();
+  popHearts();
+
+  setTimeout(() => {
+    const page = document.getElementById("page");
+    page.innerHTML = `
+      <div class="container" style="text-align:left;">
+        <h1 style="text-align:center;">ЖАНЫМ ЖАНЫМ❤️</h1>
+
+        <ol style="font-size:18px;line-height:1.6; padding-left:18px; margin:0;">
+          <li>Біз бірге уақыт өткіземіз, себебі мен ты мне очень не хватает тебя 🫶</li>
+          <br>
+          <li>
+            Біз гончарное делоға барамыз, бірге будем лепить что-то ✨✨  
+            Бұл өте жылы әрі ерекше сәт болады. Екеумізге естелік болып қалады ❤️  
+            <br>
+            Место: <b>Yasy</b> — 
+            <a href="https://2gis.kz/almaty/geo/70000001089213656"
+               target="_blank"
+               style="color:#ff3e6c;font-weight:bold;">
+              открыть в 2GIS
+            </a>
+          </li>
+          <br>
+          <li>Ол жерде тек сен және мен боламыз — ешқандай артық шу жоқ, тек біздің ерекше атмосферамыз 💑</li>
+          <br>
+          <li>
+            Потому что как можно отказать вот ему 😏  
+            <br><br>
+            <img src="men1.jpg" alt="me"
+                 style="width:220px;max-width:80vw;border-radius:20px;box-shadow:0 8px 20px rgba(0,0,0,0.3);">
+          </li>
+          <br>
+          <li>
+            Біз бірге әдемі сәттер жасаймыз…
+            Кейін Сайранда серуендеп, кешкі уақытты бірге өткіземіз 🌙✨
+            <br><br>
+            <img src="cy1.jpeg" alt="sairan"
+                 style="width:100%;max-width:480px;border-radius:20px;box-shadow:0 8px 20px rgba(0,0,0,0.3);">
+          </li>
+          <br>
+          <li>Потому что… почему бы и нет? 😌💗</li>
+          <br>
+          <li>Өйткені мен сенің күлімсірегеніңді көргім келеді және бұл күнді екеуміз үшін ерекше еткім келеді ❤️</li>
+        </ol>
+      </div>
+    `;
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 400);
+}
+
+function createHearts() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.textContent = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = (3 + Math.random() * 5) + "s";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 8000);
+}
+setInterval(createHearts, 300);
+
+function createConfetti() {
+  for (let i = 0; i < 120; i++) {
+    const conf = document.createElement("div");
+    conf.className = "confetti";
+    conf.style.left = Math.random() * 100 + "vw";
+    conf.style.top = "-10px";
+    conf.style.backgroundColor = ["#ff0","#0ff","#f0f","#0f0","#f00","#ff69b4"][Math.floor(Math.random()*6)];
+    conf.style.animationDuration = (2 + Math.random() * 2.5) + "s";
+    document.body.appendChild(conf);
+    setTimeout(() => conf.remove(), 3000);
+  }
+}
+
+function popHearts() {
+  const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+  for (let i = 0; i < 18; i++) {
+    const h = document.createElement("div");
+    h.className = "pop";
+    h.textContent = "💖";
+    h.style.left = (cx + (Math.random() * 180 - 90)) + "px";
+    h.style.top  = (cy + (Math.random() * 120 - 60)) + "px";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1200);
+  }
+}
+</script>
+
+</body>
+</html>
